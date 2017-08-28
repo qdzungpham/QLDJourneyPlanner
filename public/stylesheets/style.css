@@ -1,0 +1,41 @@
+/*!
+ * Start Bootstrap - 4 Col Portfolio (http://startbootstrap.com/template-overviews/4-col-portfolio)
+ * Copyright 2013-2017 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-4-col-portfolio/blob/master/LICENSE)
+ */
+
+body {
+    padding-top: 54px;
+}
+
+@media (min-width: 992px) {
+    body {
+        padding-top: 56px;
+    }
+}
+
+#googlemaps { 
+  	height: 100%; 
+  	width: 100%; 
+  	position:absolute; 
+  	top: 0; 
+  	left: 0; 
+  	z-index: 0; /* Set z-index to 0 as it will be on a layer below the contact form */
+}
+
+#floating-panel {
+	margin-top: 30px;
+	margin-left: -50px;
+}
+
+#panel-btn {
+	width: 100%;
+}
+
+.portfolio-item {
+    margin-bottom: 30px;
+}
+
+.pagination {
+    margin-bottom: 30px;
+}
