@@ -49,15 +49,7 @@
 </nav>
 
 <div id="googlemaps"></div>
-<script>
-    var map;
-    function initMap() {
-        map = new google.maps.Map(document.getElementById('googlemaps'), {
-            center: {lat: -34.397, lng: 150.644},
-            zoom: 8
-        });
-    }
-</script>
+
 <!-- Page Content -->
 <div class="container">
     <div class="row">
@@ -102,9 +94,11 @@
 
 <!-- Bootstrap core JavaScript -->
 <script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/popper/popper.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzrKaRm0lltEbxcSSZz4MFEj1k3N0OBtY&callback=initMap"
         async defer></script>
+<script src="javascripts/googleMaps.js"></script>
 
 </body>
 
