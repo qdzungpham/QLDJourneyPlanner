@@ -3,11 +3,21 @@ const MAPAPP = {};
 MAPAPP.markers = [];
 MAPAPP.currentInfoWindow;
 
+let currentInforWindow;
+const webcamMarkers = [];
+const hazardMarkers = [];
+const crashMarkers = [];
+const congestionMarkers = [];
+const roadworkMarkers = [];
+const specialEventMarker = [];
+const floodingMarkers = [];
+const polyLines = [];
+
 $(document).ready(function() {
 
 });
 
-function webcamsData() {
+function getTrafficCamsData() {
     $.ajax({
         url: '/webcamsData',
         dataType: 'json',
@@ -19,7 +29,7 @@ function webcamsData() {
 
 }
 
-function eventsData() {
+function getTrafficEventsData() {
     $.ajax({
         url: '/eventsData',
         dataType: 'json',
@@ -35,15 +45,19 @@ function initMap() {
     const center = {lat: -27.477337, lng: 153.028441};
 
     const mapOptions = {
-        zoom: 8,
+        zoom: 12,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
-        center: center,
+        center: center
     };
 
     map = new google.maps.Map(document.getElementById('googlemaps'), mapOptions);
-    webcamsData();
-    eventsData();
 
+    google.maps.event.addListener(map, 'click', function() {
+        if (MAPAPP.currentInfoWindow) MAPAPP.currentInfoWindow.close();
+    });
+
+    getTrafficCamsData();
+    getTrafficEventsData();
 }
 
 function populateWebcamsMarkers(data) {
@@ -52,7 +66,8 @@ function populateWebcamsMarkers(data) {
         const marker = new google.maps.Marker({
 
             position: {lat: val.geometry.coordinates[1], lng: val.geometry.coordinates[0]},
-            map: map,
+            //icon: 'http://localhost:3000/images/trafficCamPin.png',
+            //map: map,
         });
 
         const content = '<div class="card" style="width: 20rem;">' +
@@ -67,33 +82,27 @@ function populateWebcamsMarkers(data) {
             content: content
         });
 
-        google.maps.event.addListener(marker, 'click', function() {
-            if (MAPAPP.currentInfoWindow) MAPAPP.currentInfoWindow.close();
-            marker.infowindow.open(map, marker);
-            MAPAPP.currentInfoWindow = marker.infowindow;
-            map.panTo(marker.getPosition());
-        });
+        addMarkerListener(marker);
 
-        google.maps.event.addListener(map, 'click', function() {
-            if (MAPAPP.currentInfoWindow) MAPAPP.currentInfoWindow.close();
-        });
-
-        MAPAPP.markers.push(marker);
+        webcamMarkers.push(marker);
 
     });
+
+    //display traffic camera markers
+    setMarkersOnMap(webcamMarkers, map);
+    document.getElementById('trafficCams').checked = true;
 }
 
 function populateEventsMarkers(data) {
     $.each(data.features, function(key, val) {
+        let marker;
         if (val.geometry.geometries[0].type === "Point") {
-            const marker = new google.maps.Marker({
+            marker = new google.maps.Marker({
                 position: {lat: val.geometry.geometries[0].coordinates[1], lng: val.geometry.geometries[0].coordinates[0]},
-                map: map,
             });
         } else if (val.geometry.geometries[0].type === "LineString") {
-            const marker = new google.maps.Marker({
+            marker = new google.maps.Marker({
                 position: {lat: val.geometry.geometries[0].coordinates[Math.floor(val.geometry.geometries[0].coordinates.length/2)][1], lng: val.geometry.geometries[0].coordinates[Math.floor(val.geometry.geometries[0].coordinates.length/2)][0]},
-                map: map,
             });
 
             const coordinates = [];
@@ -107,9 +116,65 @@ function populateEventsMarkers(data) {
                 strokeColor: '#37474F',
                 strokeOpacity: 1.0,
                 strokeWeight: 2,
-                map: map
+                //map: map
             });
+
+            polyLines.push(path);
+
+        }
+        marker.infowindow = new google.maps.InfoWindow({
+            content: key.toString()
+        })
+
+        addMarkerListener(marker);
+
+        const eventType = val.properties.event_type;
+
+        if (eventType === 'Hazard') {
+            hazardMarkers.push(marker)
+        } else if (eventType === 'Crash') {
+            crashMarkers.push(marker)
+        } else if (eventType === 'Congestion') {
+            congestionMarkers.push(marker)
+        } else if (eventType === 'Special event') {
+            specialEventMarker.push(marker)
+        } else if (eventType === 'Roadworks') {
+            roadworkMarkers.push(marker)
+        } else if (eventType === 'Flooding') {
+            floodingMarkers.push(marker)
         }
 
-    })
+
+
+    });
+
+    setMarkersOnMap(hazardMarkers, map);
+    document.getElementById('hazards').checked = true;
+    setMarkersOnMap(crashMarkers, map);
+    document.getElementById('crashes').checked = true;
+    setMarkersOnMap(congestionMarkers, map);
+    document.getElementById('congestion').checked = true;
+    setMarkersOnMap(roadworkMarkers, map);
+    document.getElementById('roadworks').checked = true;
+    setMarkersOnMap(specialEventMarker, map);
+    document.getElementById('specialEvents').checked = true;
+    setMarkersOnMap(floodingMarkers, map);
+    document.getElementById('flooding').checked = true;
+    setMarkersOnMap(polyLines, map);
 }
+
+function addMarkerListener(marker) {
+    google.maps.event.addListener(marker, 'click', function() {
+        if (MAPAPP.currentInfoWindow) MAPAPP.currentInfoWindow.close();
+        marker.infowindow.open(map, marker);
+        MAPAPP.currentInfoWindow = marker.infowindow;
+        map.panTo(marker.getPosition());
+    });
+}
+
+function setMarkersOnMap(markerList, map) {
+    for (let i = 0; i < markerList.length; i++) {
+        markerList[i].setMap(map);
+    }
+}
+

@@ -53,18 +53,69 @@
 <!-- Page Content -->
 <div class="container">
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <div id="floating-panel" class="card">
                 <div class="card-header">
-                    search
-                </div>
-                <div class="card-block">
-                    <ul class="nav nav-pills nav-justified">
+                    <ul class="nav nav-pills nav-justified card-header-pills">
                         <li class="nav-item">
                             <a class="nav-link active" href="#">Options</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Directions</a>
+                            <a class="nav-link" href="#">Navigations</a>
+                        </li>
+
+                    </ul>
+                </div>
+                <div class="card-block">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
+                                <input id="trafficCams" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">Traffic cameras</span>
+                            </label>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
+                                <input id="hazards" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">Hazards</span>
+                            </label>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
+                                <input id="crashes" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">Crashes</span>
+                            </label>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
+                                <input id="congestion" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">Congestion</span>
+                            </label>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
+                                <input id="roadworks" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">Roadwords</span>
+                            </label>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
+                                <input id="specialEvents" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">Flooding</span>
+                            </label>
+                        </li>
+                        <li class="list-group-item">
+                            <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
+                                <input id="flooding" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">Flooding</span>
+                            </label>
                         </li>
                     </ul>
                 </div>
@@ -85,13 +136,13 @@
 <!-- /.container -->
 
 <!-- Footer -->
+<!--
 <footer class="py-5 bg-dark">
     <div class="container">
         <p class="m-0 text-center text-white">Copyright &copy; Your Website 2017</p>
     </div>
-    <!-- /.container -->
 </footer>
-
+-->
 <!-- Bootstrap core JavaScript -->
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/popper/popper.min.js"></script>
@@ -99,6 +150,7 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzrKaRm0lltEbxcSSZz4MFEj1k3N0OBtY&callback=initMap"
         async defer></script>
 <script src="javascripts/googleMaps.js"></script>
+<script src="javascripts/floatingPanel.js"></script>
 
 </body>
 
