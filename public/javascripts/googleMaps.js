@@ -64,10 +64,8 @@ function populateWebcamsMarkers(data) {
 
     $.each(data.features, function(key, val) {
         const marker = new google.maps.Marker({
-
             position: {lat: val.geometry.coordinates[1], lng: val.geometry.coordinates[0]},
-            //icon: 'http://localhost:3000/images/trafficCamPin.png',
-            //map: map,
+            icon: 'http://localhost:3000/images/pin_camera.png'
         });
 
         const content = '<div class="card" style="width: 20rem;">' +
@@ -96,13 +94,17 @@ function populateWebcamsMarkers(data) {
 function populateEventsMarkers(data) {
     $.each(data.features, function(key, val) {
         let marker;
+        let polyLine;
+        const eventType = val.properties.event_type;
         if (val.geometry.geometries[0].type === "Point") {
             marker = new google.maps.Marker({
                 position: {lat: val.geometry.geometries[0].coordinates[1], lng: val.geometry.geometries[0].coordinates[0]},
+                icon: eventMarkerIcons(eventType)
             });
         } else if (val.geometry.geometries[0].type === "LineString") {
             marker = new google.maps.Marker({
                 position: {lat: val.geometry.geometries[0].coordinates[Math.floor(val.geometry.geometries[0].coordinates.length/2)][1], lng: val.geometry.geometries[0].coordinates[Math.floor(val.geometry.geometries[0].coordinates.length/2)][0]},
+                icon: eventMarkerIcons(eventType)
             });
 
             const coordinates = [];
@@ -110,7 +112,7 @@ function populateEventsMarkers(data) {
                 coordinates.push({lat: ob[1], lng: ob[0]});
             })
 
-            const path = new google.maps.Polyline({
+            polyLine = new google.maps.Polyline({
                 path: coordinates,
                 geodesic: true,
                 strokeColor: '#37474F',
@@ -119,33 +121,57 @@ function populateEventsMarkers(data) {
                 //map: map
             });
 
-            polyLines.push(path);
+            polyLines.push(polyLine);
 
         }
+
+        const content = '<table class="table">' +
+                        '<tr>' +
+                            '<td>Mark</td>' +
+                            '<td>Ottasdz adsad asdasd o</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                            '<td>Mark</td>' +
+                            '<td>Ottasdz adsad asdasd o</td>' +
+                        '</tr>' +
+                        '</table>';
         marker.infowindow = new google.maps.InfoWindow({
-            content: key.toString()
+            content: content
         })
 
         addMarkerListener(marker);
 
-        const eventType = val.properties.event_type;
-
         if (eventType === 'Hazard') {
-            hazardMarkers.push(marker)
+            hazardMarkers.push(marker);
+            if (checkPolyLineExisted(polyLine)) {
+                hazardMarkers.push(polyLine)
+            }
         } else if (eventType === 'Crash') {
-            crashMarkers.push(marker)
+            crashMarkers.push(marker);
+            if (checkPolyLineExisted(polyLine)) {
+                crashMarkers.push(polyLine)
+            }
         } else if (eventType === 'Congestion') {
-            congestionMarkers.push(marker)
+            congestionMarkers.push(marker);
+            if (checkPolyLineExisted(polyLine)) {
+                congestionMarkers.push(polyLine)
+            }
         } else if (eventType === 'Special event') {
-            specialEventMarker.push(marker)
+            specialEventMarker.push(marker);
+            if (checkPolyLineExisted(polyLine)) {
+                specialEventMarker.push(polyLine)
+            }
         } else if (eventType === 'Roadworks') {
-            roadworkMarkers.push(marker)
+            roadworkMarkers.push(marker);
+            if (checkPolyLineExisted(polyLine)) {
+                roadworkMarkers.push(polyLine)
+            }
         } else if (eventType === 'Flooding') {
-            floodingMarkers.push(marker)
+            floodingMarkers.push(marker);
+            if (checkPolyLineExisted(polyLine)) {
+                floodingMarkers.push(polyLine)
+            }
         }
-
-
-
     });
 
     setMarkersOnMap(hazardMarkers, map);
@@ -160,7 +186,7 @@ function populateEventsMarkers(data) {
     document.getElementById('specialEvents').checked = true;
     setMarkersOnMap(floodingMarkers, map);
     document.getElementById('flooding').checked = true;
-    setMarkersOnMap(polyLines, map);
+    //setMarkersOnMap(polyLines, map);
 }
 
 function addMarkerListener(marker) {
@@ -176,5 +202,14 @@ function setMarkersOnMap(markerList, map) {
     for (let i = 0; i < markerList.length; i++) {
         markerList[i].setMap(map);
     }
+}
+
+function checkPolyLineExisted(polyLine) {
+    return polyLine;
+}
+
+function eventMarkerIcons(type) {
+    type = type.replace(/\s/g, '');
+    return 'http://localhost:3000/images/pin_' + type + '.png'
 }
 
