@@ -13,9 +13,7 @@ const specialEventMarker = [];
 const floodingMarkers = [];
 const polyLines = [];
 
-$(document).ready(function() {
 
-});
 
 function getTrafficCamsData() {
     $.ajax({
@@ -55,9 +53,10 @@ function initMap() {
     google.maps.event.addListener(map, 'click', function() {
         if (MAPAPP.currentInfoWindow) MAPAPP.currentInfoWindow.close();
     });
-
+    initAutoComplete();
     getTrafficCamsData();
     getTrafficEventsData();
+
 }
 
 function populateWebcamsMarkers(data) {
@@ -212,4 +211,6 @@ function eventMarkerIcons(type) {
     type = type.replace(/\s/g, '');
     return 'http://localhost:3000/images/pin_' + type + '.png'
 }
+
+
 

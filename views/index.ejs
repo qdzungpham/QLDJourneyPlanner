@@ -58,67 +58,85 @@
                 <div class="card-header">
                     <ul class="nav nav-pills nav-justified card-header-pills">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#">Options</a>
+                            <a class="nav-link" data-toggle="tab" href="#options" role="tab">Options</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Navigations</a>
+                            <a class="nav-link" data-toggle="tab" href="#directions" role="tab">Directions</a>
                         </li>
 
                     </ul>
                 </div>
                 <div class="card-block">
+                    <div class="tab-content">
+                        <div class="tab-pane" id="options" role="tabpanel">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
+                                        <input id="trafficCams" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">Traffic cameras</span>
+                                    </label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
+                                        <input id="hazards" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">Hazards</span>
+                                    </label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
+                                        <input id="crashes" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">Crashes</span>
+                                    </label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
+                                        <input id="congestion" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">Congestion</span>
+                                    </label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
+                                        <input id="roadworks" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">Roadwords</span>
+                                    </label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
+                                        <input id="specialEvents" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">Special Events</span>
+                                    </label>
+                                </li>
+                                <li class="list-group-item">
+                                    <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
+                                        <input id="flooding" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">Flooding</span>
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane" id="directions" role="tabpanel">
+                            <div class="my-block">
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">@</span>
+                                    <input id="startPoint" type="text" class="form-control" placeholder="Enter a start point" aria-describedby="basic-addon1">
+                                </div>
+                                <div class="input-group" style="margin-top: 5px">
+                                    <span class="input-group-addon" id="basic-addon1">@</span>
+                                    <input id="destination" type="text" class="form-control" placeholder="Enter a destination" aria-describedby="basic-addon1">
+                                </div>
+                                <button onclick="findJourney()" type="button" class="btn btn-primary">go</button>
+                            </div>
+                        </div>
 
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
-                                <input id="trafficCams" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
-                                <span class="custom-control-indicator"></span>
-                                <span class="custom-control-description">Traffic cameras</span>
-                            </label>
-                        </li>
-                        <li class="list-group-item">
-                            <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
-                                <input id="hazards" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
-                                <span class="custom-control-indicator"></span>
-                                <span class="custom-control-description">Hazards</span>
-                            </label>
-                        </li>
-                        <li class="list-group-item">
-                            <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
-                                <input id="crashes" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
-                                <span class="custom-control-indicator"></span>
-                                <span class="custom-control-description">Crashes</span>
-                            </label>
-                        </li>
-                        <li class="list-group-item">
-                            <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
-                                <input id="congestion" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
-                                <span class="custom-control-indicator"></span>
-                                <span class="custom-control-description">Congestion</span>
-                            </label>
-                        </li>
-                        <li class="list-group-item">
-                            <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
-                                <input id="roadworks" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
-                                <span class="custom-control-indicator"></span>
-                                <span class="custom-control-description">Roadwords</span>
-                            </label>
-                        </li>
-                        <li class="list-group-item">
-                            <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
-                                <input id="specialEvents" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
-                                <span class="custom-control-indicator"></span>
-                                <span class="custom-control-description">Special Events</span>
-                            </label>
-                        </li>
-                        <li class="list-group-item">
-                            <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0">
-                                <input id="flooding" onclick="optionsHandler(this)" type="checkbox" class="custom-control-input">
-                                <span class="custom-control-indicator"></span>
-                                <span class="custom-control-description">Flooding</span>
-                            </label>
-                        </li>
-                    </ul>
+                    </div>
+
                 </div>
                 <div class="card-footer">
                     <div class="small text-muted">
@@ -148,11 +166,13 @@
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/popper/popper.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzrKaRm0lltEbxcSSZz4MFEj1k3N0OBtY&callback=initMap"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzrKaRm0lltEbxcSSZz4MFEj1k3N0OBtY&libraries=places&callback=initMap"
         async defer></script>
 <script src="javascripts/googleMaps.js"></script>
 <script src="javascripts/floatingPanel.js"></script>
-
+<script src="javascripts/journeyPlanner.js"></script>
+<script src="javascripts/RouteBoxer_packed.js"></script>
+<script src="javascripts/RouteBoxer.js"></script>
 </body>
 
 </html>
