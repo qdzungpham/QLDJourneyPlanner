@@ -75,43 +75,92 @@ function convertToLatLngBounds(box) {
 function performSearches(boxes) {
     setMarkersOnMap(placesMarkers, null);
     placesMarkers = [];
-    boxes.forEach(function(box) {
-        const bound = convertToLatLngBounds(box);
-        const request = {
-            bounds: bound,
-            keyword: 'bars'
-        };
-        const service = new google.maps.places.PlacesService(map);
-        service.nearbySearch(request, function(results, status) {
-            if (status == google.maps.places.PlacesServiceStatus.OK) {
-                console.log(results);
-                results.forEach(function(place) {
-                    var circle ={
-                        path: google.maps.SymbolPath.CIRCLE,
-                        fillColor: 'red',
-                        fillOpacity: 1,
-                        scale: 4.5,
-                        strokeColor: 'white',
-                        strokeWeight: 1
-                    };
-                    const marker = new google.maps.Marker({
-                        //map: map,
-                        position: place.geometry.location,
-                        icon: circle
-                    });
-                    const infowindow = new google.maps.InfoWindow();
-                    google.maps.event.addListener(marker, 'click', function() {
-                        infowindow.setContent(place.name);
-                        infowindow.open(map, this);
-                    });
-                    if (bound.contains(new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng()))) {
-                        placesMarkers.push(marker);
-                        marker.setMap(map);
+    const keyword = document.getElementById('keyword').value;
+    for (var i = 0; i < boxes.length; i++) {
+        (function(i) {
+            setTimeout(function() {
+                const bound = convertToLatLngBounds(boxes[i]);
+                const request = {
+                    bounds: bound,
+                    keyword: keyword
+                };
+                const service = new google.maps.places.PlacesService(map);
+                service.nearbySearch(request, function(results, status) {
+                    if (status == google.maps.places.PlacesServiceStatus.OK) {
+                        console.log(results);
+                        results.forEach(function(place) {
+                            var circle ={
+                                path: google.maps.SymbolPath.CIRCLE,
+                                fillColor: '#B71C1C',
+                                fillOpacity: 1,
+                                scale: 4.5,
+                                strokeColor: 'white',
+                                strokeWeight: 1
+                            };
+                            const marker = new google.maps.Marker({
+                                //map: map,
+                                position: place.geometry.location,
+                                icon: circle
+                            });
+                            const infowindow = new google.maps.InfoWindow();
+                            marker.infowindow = new google.maps.InfoWindow({
+                                content: place.name
+                            })
+                            addMarkerListener(marker);
+
+                            if (bound.contains(new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng()))) {
+                                placesMarkers.push(marker);
+                                marker.setMap(map);
+                            }
+                        })
+                    } else {
+                        console.log(status);
                     }
                 })
-            } else {
-                console.log(status);
-            }
-        })
-    });
+
+            }, 400 * i);
+        }(i));
+    }
 }
+
+/*
+boxes.forEach(function(box) {
+    const bound = convertToLatLngBounds(box);
+    const request = {
+        bounds: bound,
+        keyword: 'bars'
+    };
+    const service = new google.maps.places.PlacesService(map);
+    service.nearbySearch(request, function(results, status) {
+        if (status == google.maps.places.PlacesServiceStatus.OK) {
+            console.log(results);
+            results.forEach(function(place) {
+                var circle ={
+                    path: google.maps.SymbolPath.CIRCLE,
+                    fillColor: 'red',
+                    fillOpacity: 1,
+                    scale: 4.5,
+                    strokeColor: 'white',
+                    strokeWeight: 1
+                };
+                const marker = new google.maps.Marker({
+                    //map: map,
+                    position: place.geometry.location,
+                    icon: circle
+                });
+                const infowindow = new google.maps.InfoWindow();
+                google.maps.event.addListener(marker, 'click', function() {
+                    infowindow.setContent(place.name);
+                    infowindow.open(map, this);
+                });
+                if (bound.contains(new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng()))) {
+                    placesMarkers.push(marker);
+                    marker.setMap(map);
+                }
+            })
+        } else {
+            console.log(status);
+        }
+    })
+});
+*/

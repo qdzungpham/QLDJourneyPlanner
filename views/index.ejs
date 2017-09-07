@@ -13,6 +13,8 @@
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
     <!-- Custom styles for this template -->
     <link href="stylesheets/style.css" rel="stylesheet">
 
@@ -56,12 +58,12 @@
         <div class="col-sm-3">
             <div id="floating-panel" class="card">
                 <div class="card-header">
-                    <ul class="nav nav-pills nav-justified card-header-pills">
+                    <ul class="nav nav-pills card-header-pills">
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#options" role="tab">Options</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#directions" role="tab">Directions</a>
+                            <a class="nav-link" data-toggle="tab" href="#directions" role="tab">Journey Planner</a>
                         </li>
 
                     </ul>
@@ -124,12 +126,22 @@
                         <div class="tab-pane" id="directions" role="tabpanel">
                             <div class="my-block">
                                 <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon1">@</span>
+                                    <span class="input-group-addon" id="basic-addon1">
+                                        <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+                                    </span>
                                     <input id="startPoint" type="text" class="form-control" placeholder="Enter a start point" aria-describedby="basic-addon1">
                                 </div>
                                 <div class="input-group" style="margin-top: 5px">
-                                    <span class="input-group-addon" id="basic-addon1">@</span>
+                                    <span class="input-group-addon" id="basic-addon1">
+                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                    </span>
                                     <input id="destination" type="text" class="form-control" placeholder="Enter a destination" aria-describedby="basic-addon1">
+                                </div>
+                                <div class="input-group" style="margin-top: 5px">
+                                    <span class="input-group-addon" id="basic-addon1">
+                                        <i class="fa fa-flag" aria-hidden="true"></i>
+                                    </span>
+                                    <input id="keyword" type="text" class="form-control" placeholder="Enter a keyword" aria-describedby="basic-addon1">
                                 </div>
                                 <button onclick="findJourney()" type="button" class="btn btn-primary">go</button>
                             </div>
@@ -139,10 +151,13 @@
 
                 </div>
                 <div class="card-footer">
-                    <div class="small text-muted">
-                        Updated yesterday at 11:59 PM
-                        <%=sample%>
+                    <div class="row">
+                    <div id="loader" class="loader"> </div>
+                    <div id="infor" class="small text-muted">
+                        Loading...
                     </div>
+                    </div>
+
                 </div>
 
             </div>

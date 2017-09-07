@@ -19,7 +19,12 @@ function getTrafficCamsData() {
         dataType: 'json',
         cache: false
     }).done(function(data){
+        if (data.error) {
+            window.alert('QldTraffic server is not responding. Please refresh the page.');
+            return
+        }
         populateWebcamsMarkers(data);
+
         console.log(data);
     })
 
@@ -31,8 +36,16 @@ function getTrafficEventsData() {
         dataType: 'json',
         cache: false
     }).done(function(data){
+        if (data.error) {
+            window.alert('QldTraffic server is not responding. Please refresh the page.');
+            return
+        }
         console.log(data);
         populateEventsMarkers(data);
+        let infor = document.getElementById('infor');
+        const currentdate = new Date();
+        infor.innerHTML = `Traffic information updated at ${currentdate.getHours()}:${currentdate.getMinutes()}:${currentdate.getSeconds()}`;
+        document.getElementById("loader").style.display = "none";
     })
 
 }
@@ -56,6 +69,7 @@ function initMap() {
     getTrafficCamsData();
     getTrafficEventsData();
 
+
 }
 
 function populateWebcamsMarkers(data) {
@@ -66,13 +80,13 @@ function populateWebcamsMarkers(data) {
             icon: 'http://localhost:3000/images/pin_camera.png'
         });
 
-        const content = '<div class="card" style="width: 20rem;">' +
-                        '<img class="card-img-top" src="' + val.properties.image_url + '" alt="Card image cap">' +
-                        '<div class="card-block">' +
-                        '<p class="card-text">' + val.properties.description + '</p>' +
-                        '<a href="#" class="btn btn-primary">Refresh</a>' +
-                        '</div>' +
-                        '</div>';
+        const content = `<div class="card" style="width: 20rem; border-width: 0px">
+                           <img id="refresh" class="card-img-top" src="${val.properties.image_url}" alt="Card image cap">
+                           <div class="card-block">
+                              <h6 class="card-title">${val.properties.description}</h6>
+                              <p class="card-text">Direction: ${val.properties.direction}</p>
+                           </div>
+                         </div>`
 
         marker.infowindow = new google.maps.InfoWindow({
             content: content
