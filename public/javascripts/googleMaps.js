@@ -2,8 +2,6 @@ let map;
 const MAPAPP = {};
 MAPAPP.markers = [];
 MAPAPP.currentInfoWindow;
-
-let currentInforWindow;
 const webcamMarkers = [];
 const hazardMarkers = [];
 const crashMarkers = [];
@@ -54,6 +52,7 @@ function initMap() {
         if (MAPAPP.currentInfoWindow) MAPAPP.currentInfoWindow.close();
     });
     initAutoComplete();
+
     getTrafficCamsData();
     getTrafficEventsData();
 
