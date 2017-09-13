@@ -25,7 +25,7 @@ function getTrafficCamsData() {
         }
         populateWebcamsMarkers(data);
 
-        console.log(data);
+        //console.log(data);
     })
 
 }
@@ -40,7 +40,7 @@ function getTrafficEventsData() {
             window.alert('QldTraffic server is not responding. Please refresh the page.');
             return
         }
-        console.log(data);
+        //console.log(data);
         populateEventsMarkers(data);
         let infor = document.getElementById('infor');
         const currentdate = new Date();
@@ -64,6 +64,8 @@ function initMap() {
     google.maps.event.addListener(map, 'click', function() {
         if (MAPAPP.currentInfoWindow) MAPAPP.currentInfoWindow.close();
     });
+    const trafficLayer = new google.maps.TrafficLayer();
+    trafficLayer.setMap(map);
     initAutoComplete();
 
     getTrafficCamsData();
@@ -81,7 +83,7 @@ function populateWebcamsMarkers(data) {
         });
 
         const content = `<div class="card" style="width: 20rem; border-width: 0px">
-                           <img id="refresh" class="card-img-top" src="${val.properties.image_url}" alt="Card image cap">
+                           <img class="card-img-top" src="${val.properties.image_url}" alt="Card image cap">
                            <div class="card-block">
                               <h6 class="card-title">${val.properties.description}</h6>
                               <p class="card-text">Direction: ${val.properties.direction}</p>
@@ -137,18 +139,34 @@ function populateEventsMarkers(data) {
 
         }
 
-        const content = '<table class="table">' +
-                        '<tr>' +
-                            '<td>Mark</td>' +
-                            '<td>Ottasdz adsad asdasd o</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                            '<td>Mark</td>' +
-                            '<td>Ottasdz adsad asdasd o</td>' +
-                        '</tr>' +
-                        '</table>';
+        const content = `<h6>${val.properties.event_type}</h6>
+                        <table border="0">
+                          <tbody>
+                            <tr>
+                              <th scope="row">Suburbs/Localities</th>
+                              <td>${val.properties.road_summary.locality}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Roads</th>
+                              <td>${val.properties.road_summary.road_name}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Description</th>
+                              <td>${val.properties.description}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">What to expect</th>
+                              <td>${val.properties.impact.impact_subtype}</td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Last updated</th>
+                              <td>${val.properties.last_updated.substring(0, 10)}</td>
+                            </tr>
+                          </tbody>
+                        </table>`
         marker.infowindow = new google.maps.InfoWindow({
-            content: content
+            content: content,
+            maxWidth: 300
         })
 
         addMarkerListener(marker);

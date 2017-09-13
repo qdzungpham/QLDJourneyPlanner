@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>QLD Live Traffic</title>
+    <title>QLD Journey Planner</title>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -25,7 +25,7 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="#">QLDLiveTraffic</a>
+        <a class="navbar-brand" href="#">QLD Journey Planner</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -36,26 +36,17 @@
                         <span class="sr-only">(current)</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Services</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
-                </li>
             </ul>
         </div>
     </div>
 </nav>
 
-<div id="googlemaps"></div>
 
 <!-- Page Content -->
 <div class="container">
+    <div id="googlemaps"></div>
     <div class="row">
-        <div class="col-sm-3">
+        <div class="col-md-3">
             <div id="floating-panel" class="card">
                 <div class="card-header">
                     <ul class="nav nav-pills card-header-pills">
@@ -125,9 +116,20 @@
                         </div>
                         <div class="tab-pane" id="directions" role="tabpanel">
                             <div class="my-block">
-                                <div class="input-group">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-outline-secondary active">
+                                        <input type="radio" name="options" id="BICYCLING" autocomplete="off"><i class="fa fa-bicycle" aria-hidden="true"></i>
+                                    </label>
+                                    <label class="btn btn-outline-secondary active">
+                                        <input type="radio" name="options" id="DRIVING" autocomplete="off" checked><i class="fa fa-car" aria-hidden="true"></i>
+                                    </label>
+                                    <label class="btn btn-outline-secondary">
+                                        <input type="radio" name="options" id="TRANSIT" autocomplete="off"><i class="fa fa-subway" aria-hidden="true"></i>
+                                    </label>
+                                </div>
+                                <div class="input-group" style="margin-top: 5px">
                                     <span class="input-group-addon" id="basic-addon1">
-                                        <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
                                     </span>
                                     <input id="startPoint" type="text" class="form-control" placeholder="Enter a start point" aria-describedby="basic-addon1">
                                 </div>
@@ -137,19 +139,25 @@
                                     </span>
                                     <input id="destination" type="text" class="form-control" placeholder="Enter a destination" aria-describedby="basic-addon1">
                                 </div>
-                                <div class="input-group" style="margin-top: 5px">
-                                    <span class="input-group-addon" id="basic-addon1">
-                                        <i class="fa fa-flag" aria-hidden="true"></i>
-                                    </span>
-                                    <input id="keyword" type="text" class="form-control" placeholder="Enter a keyword" aria-describedby="basic-addon1">
+
+                                <label class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0" style="margin-top: 5px">
+                                    <input type="checkbox" class="custom-control-input" id="searchPlaces" onclick="searchPlaces()">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description">Search for places along the route</span>
+                                </label>
+                                <div class="input-group">
+                                    <input id="keyword" type="text" class="form-control" placeholder="Enter a keyword e.g. bars, restaurants" aria-describedby="basic-addon1" disabled>
                                 </div>
-                                <button onclick="findJourney()" type="button" class="btn btn-primary">go</button>
+                                <button onclick="findJourney()" type="button" class="btn btn-warning btn-sm btn-block" style="margin-top: 5px"><strong>Find Journey</strong></button>
+
                             </div>
+
                         </div>
 
                     </div>
 
                 </div>
+
                 <div class="card-footer">
                     <div class="row">
                     <div id="loader" class="loader"> </div>
@@ -169,6 +177,7 @@
 </div>
 <!-- /.container -->
 
+
 <!-- Footer -->
 <!--
 <footer class="py-5 bg-dark">
@@ -183,8 +192,8 @@
 <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzrKaRm0lltEbxcSSZz4MFEj1k3N0OBtY&libraries=places,visualization&callback=initMap"
         async defer></script>
-<script src="javascripts/googleMaps.js"></script>
-<script src="javascripts/floatingPanel.js"></script>
+<script src="javascripts/mapView.js"></script>
+<script src="javascripts/options.js"></script>
 <script src="javascripts/journeyPlanner.js"></script>
 
 </body>

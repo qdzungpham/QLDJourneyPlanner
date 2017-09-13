@@ -82,9 +82,6 @@ router.get('/eventsData', function(req, res, next) {
     eventsReq.end();
 });
 
-router.get('/explore', function(req, res, next) {
-
-});
 
 router.post('/journey', function(req, res, next) {
     const parsed = JSON.parse(req.body.result);
@@ -92,7 +89,7 @@ router.post('/journey', function(req, res, next) {
     parsed.forEach(function(entry) {
         arr.push([entry.lng, entry.lat]);
     });
-    console.log(arr);
+    //console.log(arr);
     let distance = 0.1;
     let boxes = boxer.box(arr, distance);
 
@@ -101,7 +98,7 @@ router.post('/journey', function(req, res, next) {
         boxes = boxer.box(arr, distance);
     }
 
-    console.log(boxes.length);
+    //console.log(boxes.length);
     res.json(boxes);
 
 

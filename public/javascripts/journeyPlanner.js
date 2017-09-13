@@ -31,27 +31,30 @@ function findJourney() {
             var directionsDisplay = new google.maps.DirectionsRenderer;
             currentRoute = directionsDisplay;
             directionsDisplay.setMap(map);
+            const travelMode = getTravelMode();
             directionsService.route({
                 origin: from.geometry.location,
                 destination: to.geometry.location,
-                travelMode: 'DRIVING'
+                travelMode: travelMode
             }, function(response, status) {
                 if (status === 'OK') {
-                    console.log(response);
+                    //console.log(response);
+                    setMarkersOnMap(placesMarkers, null);
                     directionsDisplay.setDirections(response);
 
-                    var path = response.routes[0].overview_path;
-                    $.ajax({
-                        type: "POST",
-                        url: '/journey',
-                        dataType: 'json',
-                        cache: false,
-                        data: {result: JSON.stringify(path)}
-                    }).done(function(data){
-                        console.log(data);
-                        performSearches(data);
-                    })
-
+                    if (document.getElementById('searchPlaces').checked) {
+                        var path = response.routes[0].overview_path;
+                        $.ajax({
+                            type: "POST",
+                            url: '/journey',
+                            dataType: 'json',
+                            cache: false,
+                            data: {result: JSON.stringify(path)}
+                        }).done(function (data) {
+                            //console.log(data);
+                            performSearches(data);
+                        })
+                    }
                 } else {
                     window.alert('Directions request failed due to ' + status);
                 }
@@ -73,7 +76,6 @@ function convertToLatLngBounds(box) {
 }
 
 function performSearches(boxes) {
-    setMarkersOnMap(placesMarkers, null);
     placesMarkers = [];
     const keyword = document.getElementById('keyword').value;
     for (var i = 0; i < boxes.length; i++) {
@@ -87,7 +89,7 @@ function performSearches(boxes) {
                 const service = new google.maps.places.PlacesService(map);
                 service.nearbySearch(request, function(results, status) {
                     if (status == google.maps.places.PlacesServiceStatus.OK) {
-                        console.log(results);
+                        //console.log(results);
                         results.forEach(function(place) {
                             var circle ={
                                 path: google.maps.SymbolPath.CIRCLE,
@@ -98,15 +100,45 @@ function performSearches(boxes) {
                                 strokeWeight: 1
                             };
                             const marker = new google.maps.Marker({
-                                //map: map,
                                 position: place.geometry.location,
-                                icon: circle
+                                icon: circle,
+                                title: place.name
                             });
-                            const infowindow = new google.maps.InfoWindow();
-                            marker.infowindow = new google.maps.InfoWindow({
-                                content: place.name
-                            })
-                            addMarkerListener(marker);
+
+
+                            google.maps.event.addListener(marker, 'click', function() {
+                                service.getDetails({placeId: place.place_id}, function(place, status) {
+                                    if (status == google.maps.places.PlacesServiceStatus.OK) {
+
+                                        let content = `<h6>${place.name}</h6>
+                                                        <h7><strong>Address: </strong>${place.formatted_address}</h7><br>`;
+                                        const phoneNum = place.formatted_phone_number;
+                                        if (phoneNum) {
+                                            content += `<h7><strong>Phone Number: </strong>${phoneNum}</h7><br>`
+                                        }
+                                        const website = place.website;
+                                        if (website) {
+                                            content += `<h7><strong>Website: </strong>${website}</h7><br>`
+                                        }
+                                        content += `<h7><a href="${place.url}">View on Google Maps</a></h7><br>`
+                                        const photos = place.photos;
+                                        if (photos) {
+                                            photos.forEach(function(photo) {
+                                                content += `<img src="${photo.getUrl({'maxWidth': 90, 'maxHeight': 90})}" alt="" class="img-thumbnail">`;
+                                            })
+                                        }
+                                        marker.infowindow = new google.maps.InfoWindow({
+                                            content: content,
+                                            maxWidth: 300,
+                                            maxHeight: 300
+                                        });
+                                        if (MAPAPP.currentInfoWindow) MAPAPP.currentInfoWindow.close();
+                                        marker.infowindow.open(map, marker);
+                                        MAPAPP.currentInfoWindow = marker.infowindow;
+                                        map.panTo(marker.getPosition());
+                                    }
+                                });
+                            });
 
                             if (bound.contains(new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng()))) {
                                 placesMarkers.push(marker);
@@ -123,44 +155,25 @@ function performSearches(boxes) {
     }
 }
 
-/*
-boxes.forEach(function(box) {
-    const bound = convertToLatLngBounds(box);
-    const request = {
-        bounds: bound,
-        keyword: 'bars'
-    };
-    const service = new google.maps.places.PlacesService(map);
-    service.nearbySearch(request, function(results, status) {
-        if (status == google.maps.places.PlacesServiceStatus.OK) {
-            console.log(results);
-            results.forEach(function(place) {
-                var circle ={
-                    path: google.maps.SymbolPath.CIRCLE,
-                    fillColor: 'red',
-                    fillOpacity: 1,
-                    scale: 4.5,
-                    strokeColor: 'white',
-                    strokeWeight: 1
-                };
-                const marker = new google.maps.Marker({
-                    //map: map,
-                    position: place.geometry.location,
-                    icon: circle
-                });
-                const infowindow = new google.maps.InfoWindow();
-                google.maps.event.addListener(marker, 'click', function() {
-                    infowindow.setContent(place.name);
-                    infowindow.open(map, this);
-                });
-                if (bound.contains(new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng()))) {
-                    placesMarkers.push(marker);
-                    marker.setMap(map);
-                }
-            })
-        } else {
-            console.log(status);
-        }
-    })
-});
-*/
+function getTravelMode() {
+    let mode;
+    if (document.getElementById('DRIVING').checked) {
+        mode = 'DRIVING'
+    } else if (document.getElementById('BICYCLING').checked) {
+        mode = 'BICYCLING'
+    } else if (document.getElementById('TRANSIT').checked) {
+        mode = 'TRANSIT'
+    }
+    return mode
+}
+
+function searchPlaces() {
+    const checkBox = document.getElementById('searchPlaces');
+    const input = document.getElementById('keyword');
+    if (checkBox.checked) {
+        input.disabled = false;
+    } else if (!checkBox.checked) {
+        input.disabled = true;
+    }
+}
+
