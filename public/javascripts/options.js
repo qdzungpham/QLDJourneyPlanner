@@ -1,5 +1,11 @@
 function optionsHandler(element) {
-    if (element.id === 'trafficCams') {
+    if (element.id === 'trafficLayer') {
+        if (!element.checked) {
+            trafficLayer.setMap(null);
+        } else {
+            trafficLayer.setMap(map);
+        }
+    } else if (element.id === 'trafficCams') {
         if (!element.checked) {
             setMarkersOnMap(webcamMarkers, null);
         } else {

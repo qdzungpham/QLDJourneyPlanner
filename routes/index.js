@@ -4,10 +4,6 @@ const https = require('https');
 const RouteBoxer = require('geojson.lib.routeboxer'),
     boxer = new RouteBoxer();
 
-const googleMapsClient = require('@google/maps').createClient({
-    key: 'AIzaSyCzrKaRm0lltEbxcSSZz4MFEj1k3N0OBtY'
-});
-
 function createTrafficDataOptions(query) {
     const apiKey = '3e83add325cbb69ac4d8e5bf433d770b';
     const hostName = 'https://api.qldtraffic.qld.gov.au/v1/';
@@ -19,12 +15,6 @@ router.get('/', function(req, res, next) {
     res.render('index', { sample: 'Express' });
 });
 
-function createFoursquareOptions(date, location) {
-    const hostName = 'https://api.foursquare.com/v2/venues/explore?';
-    const clientID = 'WJK1EZ1YRHIWAUQFZLJWYFF5L05FFJHNCFWZT2L34L55EMCK';
-    const clientSecret = '2DTWKBRK5QSTKFXECE1AHAS2OCZJWDEARC1YZXI3AQ0R5Q4T';
-    return hostName + 'v=' + date + '&near=' + location + '&client_id=' + clientID + '&client_secret=' + clientSecret;
-}
 
 router.get('/webcamsData', function(req, res, next) {
     const options = createTrafficDataOptions('webcams');
@@ -89,7 +79,7 @@ router.post('/journey', function(req, res, next) {
     parsed.forEach(function(entry) {
         arr.push([entry.lng, entry.lat]);
     });
-    //console.log(arr);
+
     let distance = 0.1;
     let boxes = boxer.box(arr, distance);
 
@@ -98,7 +88,6 @@ router.post('/journey', function(req, res, next) {
         boxes = boxer.box(arr, distance);
     }
 
-    //console.log(boxes.length);
     res.json(boxes);
 
 

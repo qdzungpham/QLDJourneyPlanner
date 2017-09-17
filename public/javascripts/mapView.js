@@ -1,7 +1,9 @@
+// global variables
 let map;
 const MAPAPP = {};
 MAPAPP.markers = [];
 MAPAPP.currentInfoWindow;
+let trafficLayer;
 const webcamMarkers = [];
 const hazardMarkers = [];
 const crashMarkers = [];
@@ -12,7 +14,7 @@ const floodingMarkers = [];
 const polyLines = [];
 
 
-
+// request traffic camera data from server and populate markers
 function getTrafficCamsData() {
     $.ajax({
         url: '/webcamsData',
@@ -30,6 +32,7 @@ function getTrafficCamsData() {
 
 }
 
+// request event data from server and populate event marker
 function getTrafficEventsData() {
     $.ajax({
         url: '/eventsData',
@@ -64,8 +67,10 @@ function initMap() {
     google.maps.event.addListener(map, 'click', function() {
         if (MAPAPP.currentInfoWindow) MAPAPP.currentInfoWindow.close();
     });
-    const trafficLayer = new google.maps.TrafficLayer();
+    trafficLayer = new google.maps.TrafficLayer();
     trafficLayer.setMap(map);
+    document.getElementById('trafficLayer').checked = true;
+
     initAutoComplete();
 
     getTrafficCamsData();
@@ -103,6 +108,55 @@ function populateWebcamsMarkers(data) {
     //display traffic camera markers
     setMarkersOnMap(webcamMarkers, map);
     document.getElementById('trafficCams').checked = true;
+}
+
+function displayEventMarkers() {
+    setMarkersOnMap(hazardMarkers, map);
+    document.getElementById('hazards').checked = true;
+    setMarkersOnMap(crashMarkers, map);
+    document.getElementById('crashes').checked = true;
+    setMarkersOnMap(congestionMarkers, map);
+    document.getElementById('congestion').checked = true;
+    setMarkersOnMap(roadworkMarkers, map);
+    document.getElementById('roadworks').checked = true;
+    setMarkersOnMap(specialEventMarker, map);
+    document.getElementById('specialEvents').checked = true;
+    setMarkersOnMap(floodingMarkers, map);
+    document.getElementById('flooding').checked = true;
+}
+
+function checkEventTypeAndPolylineAssociated(eventType, marker, polyLine) {
+    if (eventType === 'Hazard') {
+        hazardMarkers.push(marker);
+        if (polyLine) {
+            hazardMarkers.push(polyLine)
+        }
+    } else if (eventType === 'Crash') {
+        crashMarkers.push(marker);
+        if (polyLine) {
+            crashMarkers.push(polyLine)
+        }
+    } else if (eventType === 'Congestion') {
+        congestionMarkers.push(marker);
+        if (polyLine) {
+            congestionMarkers.push(polyLine)
+        }
+    } else if (eventType === 'Special event') {
+        specialEventMarker.push(marker);
+        if (polyLine) {
+            specialEventMarker.push(polyLine)
+        }
+    } else if (eventType === 'Roadworks') {
+        roadworkMarkers.push(marker);
+        if (polyLine) {
+            roadworkMarkers.push(polyLine)
+        }
+    } else if (eventType === 'Flooding') {
+        floodingMarkers.push(marker);
+        if (polyLine) {
+            floodingMarkers.push(polyLine)
+        }
+    }
 }
 
 function populateEventsMarkers(data) {
@@ -171,52 +225,10 @@ function populateEventsMarkers(data) {
 
         addMarkerListener(marker);
 
-        if (eventType === 'Hazard') {
-            hazardMarkers.push(marker);
-            if (checkPolyLineExisted(polyLine)) {
-                hazardMarkers.push(polyLine)
-            }
-        } else if (eventType === 'Crash') {
-            crashMarkers.push(marker);
-            if (checkPolyLineExisted(polyLine)) {
-                crashMarkers.push(polyLine)
-            }
-        } else if (eventType === 'Congestion') {
-            congestionMarkers.push(marker);
-            if (checkPolyLineExisted(polyLine)) {
-                congestionMarkers.push(polyLine)
-            }
-        } else if (eventType === 'Special event') {
-            specialEventMarker.push(marker);
-            if (checkPolyLineExisted(polyLine)) {
-                specialEventMarker.push(polyLine)
-            }
-        } else if (eventType === 'Roadworks') {
-            roadworkMarkers.push(marker);
-            if (checkPolyLineExisted(polyLine)) {
-                roadworkMarkers.push(polyLine)
-            }
-        } else if (eventType === 'Flooding') {
-            floodingMarkers.push(marker);
-            if (checkPolyLineExisted(polyLine)) {
-                floodingMarkers.push(polyLine)
-            }
-        }
+        checkEventTypeAndPolylineAssociated(eventType, marker, polyLine);
     });
 
-    setMarkersOnMap(hazardMarkers, map);
-    document.getElementById('hazards').checked = true;
-    setMarkersOnMap(crashMarkers, map);
-    document.getElementById('crashes').checked = true;
-    setMarkersOnMap(congestionMarkers, map);
-    document.getElementById('congestion').checked = true;
-    setMarkersOnMap(roadworkMarkers, map);
-    document.getElementById('roadworks').checked = true;
-    setMarkersOnMap(specialEventMarker, map);
-    document.getElementById('specialEvents').checked = true;
-    setMarkersOnMap(floodingMarkers, map);
-    document.getElementById('flooding').checked = true;
-    //setMarkersOnMap(polyLines, map);
+    displayEventMarkers();
 }
 
 function addMarkerListener(marker) {
@@ -234,9 +246,6 @@ function setMarkersOnMap(markerList, map) {
     }
 }
 
-function checkPolyLineExisted(polyLine) {
-    return polyLine;
-}
 
 function eventMarkerIcons(type) {
     type = type.replace(/\s/g, '');
