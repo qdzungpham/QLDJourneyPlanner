@@ -84,7 +84,7 @@ function populateWebcamsMarkers(data) {
     $.each(data.features, function(key, val) {
         const marker = new google.maps.Marker({
             position: {lat: val.geometry.coordinates[1], lng: val.geometry.coordinates[0]},
-            icon: 'http://localhost:3000/images/pin_camera.png'
+            icon: '/images/pin_camera.png'
         });
 
         const content = `<div class="card" style="width: 20rem; border-width: 0px">
@@ -249,7 +249,7 @@ function setMarkersOnMap(markerList, map) {
 
 function eventMarkerIcons(type) {
     type = type.replace(/\s/g, '');
-    return 'http://localhost:3000/images/pin_' + type + '.png'
+    return '/images/pin_' + type + '.png'
 }
 
 
