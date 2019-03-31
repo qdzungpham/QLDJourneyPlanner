@@ -1,4 +1,4 @@
-FROM node:boron
+FROM node:10.7.0
 
 # Copy app source
 COPY . /src
@@ -10,7 +10,7 @@ WORKDIR /src
 RUN npm install
 
 # Expose port to outside world
-EXPOSE 3000
+EXPOSE 3001
 
 # Start command as per package.json
 CMD ["npm", "start"]
